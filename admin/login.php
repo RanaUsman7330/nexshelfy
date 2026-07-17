@@ -1,0 +1,8 @@
+<?php
+require __DIR__.'/../api/bootstrap.php';
+if (($u=current_user()) && ($u['role']??'')==='admin'){header('Location: ./');exit;}
+$error='';
+if(($_SERVER['REQUEST_METHOD']??'')==='POST'){
+ try{verify_csrf($_POST);$email=strtolower(clean((string)($_POST['email']??''),190));$password=(string)($_POST['password']??'');$st=db()->prepare('SELECT id,password_hash,role,status FROM users WHERE email=? LIMIT 1');$st->execute([$email]);$u=$st->fetch();if(!$u||$u['role']!=='admin'||$u['status']!=='active'||!password_verify($password,$u['password_hash']))throw new RuntimeException('Invalid admin email or password.');$_SESSION['user_id']=(int)$u['id'];session_regenerate_id(true);header('Location: ./');exit;}catch(Throwable $e){$error=$e->getMessage();}
+}
+?><!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin Login · NexShelfy</title><link rel="stylesheet" href="./assets/admin.css?v=20260715-shared-polish"></head><body class="loginbody"><main class="loginbox"><a class="brand" href="/"><span>N</span><b>NexShelfy</b><small>Admin</small></a><h1>Welcome back</h1><p>Sign in to manage users, products, orders and content.</p><?php if($error):?><div class="alert error"><?=htmlspecialchars($error)?></div><?php endif;?><form method="post" class="form"><input type="hidden" name="csrf" value="<?=csrf_token()?>"><label>Email<input type="email" name="email" required autocomplete="email"></label><label>Password<input type="password" name="password" required autocomplete="current-password"></label><button class="primary">Sign in to admin</button></form><a href="/">← Back to website</a></main><script src="./assets/admin.js?v=20260715-shared-polish"></script></body></html>

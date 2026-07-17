@@ -1,0 +1,11 @@
+<?php
+require __DIR__.'/../api/bootstrap.php';
+$count=(int)db()->query("SELECT COUNT(*) FROM users WHERE role='admin'")->fetchColumn();
+$key=(string)($_GET['key']??$_POST['setup_key']??'');
+$expected=(string)envv('ADMIN_SETUP_KEY','');
+if($expected===''||!hash_equals($expected,$key)){http_response_code(403);exit('Invalid setup key. Add ADMIN_SETUP_KEY to .env and open setup.php?key=YOUR_KEY');}
+$msg='';$error='';
+if(($_SERVER['REQUEST_METHOD']??'')==='POST'){
+ try{verify_csrf($_POST);$name=clean((string)($_POST['name']??''),100);$email=strtolower(clean((string)($_POST['email']??''),190));$password=(string)($_POST['password']??'');if(strlen($password)<10)throw new RuntimeException('Use at least 10 characters.');if(!valid_email($email)||strlen($name)<2)throw new RuntimeException('Enter valid details.');$hash=password_hash($password,PASSWORD_DEFAULT);$st=db()->prepare('INSERT INTO users(name,email,password_hash,role,status,created_at,updated_at) VALUES(?,?,?,"admin","active",NOW(),NOW()) ON DUPLICATE KEY UPDATE name=VALUES(name),password_hash=VALUES(password_hash),role="admin",status="active",updated_at=NOW()');$st->execute([$name,$email,$hash]);$msg='Admin account created. Delete or rename setup.php after logging in.';$count=1;}catch(Throwable $e){$error=$e->getMessage();}
+}
+?><!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Setup Admin</title><link rel="stylesheet" href="./assets/admin.css?v=20260715-shared-polish"></head><body class="loginbody"><main class="loginbox"><h1>Create first admin</h1><p>Existing admins: <?=$count?></p><?php if($msg):?><div class="alert success"><?=htmlspecialchars($msg)?></div><?php endif;?><?php if($error):?><div class="alert error"><?=htmlspecialchars($error)?></div><?php endif;?><form method="post" class="form"><input type="hidden" name="csrf" value="<?=csrf_token()?>"><input type="hidden" name="setup_key" value="<?=htmlspecialchars($key)?>"><label>Name<input name="name" required></label><label>Email<input type="email" name="email" required></label><label>Password<input type="password" name="password" minlength="10" required></label><button class="primary">Create admin</button></form><a href="./login.php">Go to login</a></main><script src="./assets/admin.js?v=20260715-shared-polish"></script></body></html>
