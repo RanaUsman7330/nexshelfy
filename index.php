@@ -5,21 +5,16 @@ ensure_nexshelfy_serious_schema();
 ensure_content_platform_schema();
 function e($v){return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8');}
 function product_type($slug){
-  $map=[
-    'personal-knowledge-base'=>'Notion','freelance-finance-kit'=>'Finance','content-calendar'=>'Marketing',
-    'portfolio-system'=>'Portfolio','saas-launch-kit'=>'Launch','notion-business-os'=>'Business OS'
-  ];
+  $map=['personal-knowledge-base'=>'Notion','freelance-finance-kit'=>'Finance','content-calendar'=>'Marketing',
+    'portfolio-system'=>'Portfolio','saas-launch-kit'=>'Launch','notion-business-os'=>'Business OS'];
   return $map[$slug] ?? 'Resource';
 }
 function product_icon($slug){
-  $map=[
-    'personal-knowledge-base'=>'PK','freelance-finance-kit'=>'FK','content-calendar'=>'CC',
-    'portfolio-system'=>'PS','saas-launch-kit'=>'SL','notion-business-os'=>'BO'
-  ];
+  $map=['personal-knowledge-base'=>'PK','freelance-finance-kit'=>'FK','content-calendar'=>'CC',
+    'portfolio-system'=>'PS','saas-launch-kit'=>'SL','notion-business-os'=>'BO'];
   return $map[$slug] ?? 'NS';
 }
 function product_tone($i){$tones=['indigo','amber','emerald','rose','slate','violet'];return $tones[$i%count($tones)];}
-
 function cover_img_url($path){ return function_exists('ns_public_asset_url') ? ns_public_asset_url($path) : ''; }
 function card_cover_style($path, string $fallback=''){ $style = function_exists('ns_cover_style') ? ns_cover_style($path,'linear-gradient(145deg,rgba(10,10,15,.10),rgba(10,10,15,.48))') : ''; return $style ?: $fallback; }
 function fake_downloads($p,$i){$base=(int)($p['download_count']??0);return max($base, [12481,9380,8214,7260,6892,5780][$i] ?? (4200+$i*317));}
@@ -63,81 +58,309 @@ $collections=[['📚','Productivity','Knowledge bases, planners and weekly syste
 <meta name="description" content="Free creator resources, templates, systems and digital tools for modern creators, founders and freelancers.">
 <link rel="canonical" href="https://nexshelfy.com/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/content-platform.css?v=20260715-shared-polish">
-<link rel="stylesheet" href="/assets/nexshelfy-app.css?v=20260715-shared-polish"><link rel="stylesheet" href="/assets/nexshelfy-shop-fixes.css?v=20260717-final-ui-2">
+<link rel="stylesheet" href="/assets/nexshelfy-app.css?v=20260715-shared-polish">
+<link rel="stylesheet" href="/assets/nexshelfy-shop-fixes.css?v=20260717-final-ui-2">
+<link rel="stylesheet" href="/assets/css/nexshelfy-v2.css?v=2.0">
+<script src="/assets/js/nexshelfy-v2.js?v=2.0" defer></script>
 </head>
 <body class="cp-page ns-home-page ns-home-premium">
 <?php ns_site_header('discover'); ?>
-<main>
-<section class="ns-premium-hero">
-  <div class="cp-shell ns-premium-hero-grid">
-    <div class="ns-hero-copy">
-      <div class="cp-kicker">Curated for ambitious creators</div>
-      <h1>Free creator resources.<br><span>Actually worth downloading.</span></h1>
-      <form class="ns-hero-search" action="/shop/" method="get"><input name="q" type="search" placeholder="Search templates..." aria-label="Search templates"><button type="submit">🔍</button></form>
-      <div class="ns-popular-tags" aria-label="Popular tags"><?php foreach($tags as $tag): ?><a href="/shop/?q=<?=rawurlencode($tag)?>"><?=e($tag)?></a><?php endforeach; ?></div>
-      <div class="ns-home-actions"><a class="cp-btn primary" href="/shop/">Explore free library</a><a class="cp-btn" href="/contact/">Contact</a></div>
+
+<!-- NEW MODERN HEADER -->
+<header class="ns-header" id="mainHeader">
+  <div class="ns-header-inner">
+    <a href="/" class="ns-brand">
+      <span class="ns-brand-icon">NS</span>
+      NexShelfy
+    </a>
+    <nav class="ns-nav">
+      <a href="/shop/" class="active">Discover</a>
+      <a href="/blog/">Blog</a>
+      <a href="/collections/">Collections</a>
+      <a href="/creators/">Creators</a>
+      <a href="/contact/">Contact</a>
+    </nav>
+    <div class="ns-header-actions">
+      <button class="ns-theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+      <a href="/dashboard/" class="ns-header-btn">Dashboard</a>
+      <a href="/signup/" class="ns-header-btn primary">Get Started</a>
     </div>
-    <aside class="ns-animated-shelf ns-trending-panel ns-hero-dashboard" aria-label="Trending downloads">
-      <div class="ns-dashboard-topline"><span>Downloads today</span><b>+312</b><em>★★★★★</em></div>
-      <div class="ns-dashboard-pills"><span>Recently Added</span><span>Trending</span><span>Save</span><span>Preview</span></div>
-      <div class="ns-download-counter"><small>Trending downloads</small><strong data-ns-counter="48000">48k+</strong><span>Across all resources · Updated July 2026</span></div>
-      <div class="ns-live-list">
-        <div class="ns-live-head"><b>Recently added</b><a href="/shop/">View all →</a></div>
-        <?php foreach(array_slice($products,0,4) as $i=>$p): $img=cover_img_url($p['cover_image']??''); ?>
-          <a class="ns-live-row" href="/shop/<?=e($p['slug'])?>/">
-            <?php if($img): ?><img src="<?=e($img)?>" alt="<?=e($p['name'])?>"><?php else: ?><span><?=e(substr($p['name'],0,1))?></span><?php endif; ?>
-            <div><b><?=e($p['name'])?></b><small><?=e(product_type($p['slug']))?> · <?=number_format(fake_downloads($p,$i))?> downloads</small></div>
-          </a>
+    <button class="ns-mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile Nav -->
+<nav class="ns-mobile-nav" id="mobileNav">
+  <a href="/shop/">Discover</a>
+  <a href="/blog/">Blog</a>
+  <a href="/collections/">Collections</a>
+  <a href="/creators/">Creators</a>
+  <a href="/contact/">Contact</a>
+  <a href="/dashboard/">Dashboard</a>
+  <a href="/signup/">Get Started</a>
+</nav>
+
+<main>
+<!-- HERO SECTION -->
+<section class="ns-hero">
+  <div class="ns-hero-bg"></div>
+  <div class="ns-shell ns-hero-grid">
+    <div class="ns-hero-copy">
+      <div class="ns-kicker">Curated for ambitious creators</div>
+      <h1>Free creator resources.<br><span>Actually worth downloading.</span></h1>
+      <p class="ns-hero-desc">Premium-feeling templates, systems and tools for modern creators, founders and freelancers — without the price tag.</p>
+      <form class="ns-hero-search" action="/shop/" method="get">
+        <input name="q" type="search" placeholder="Search templates, systems, tools..." aria-label="Search templates">
+        <button type="submit">Search</button>
+      </form>
+      <div class="ns-hero-tags">
+        <?php foreach($tags as $tag): ?>
+          <a href="/shop/?q=<?=rawurlencode($tag)?>"><?=e($tag)?></a>
         <?php endforeach; ?>
       </div>
-      <div class="ns-dashboard-demo"><span>🌍</span> Downloaded by creators in <b>80+ countries</b></div>
-      <div class="ns-shelf-base"><span></span><span></span><span></span></div>
-    </aside>
-  </div>
-</section>
-
-<section class="cp-shell ns-stats-strip ns-proof-strip ns-stats-icons" aria-label="NexShelfy statistics"><div><i>⬇</i><b data-ns-counter="48000">48k+</b><span>Downloads across resources</span></div><div><i>❤</i><b data-ns-counter="1800">1.8k+</b><span>Saved by visitors</span></div><div><i>✉</i><b data-ns-counter="12000">12k+</b><span>Newsletter creators</span></div><div><i>★</i><b>4.9</b><span>Average resource rating</span></div><small>Based on platform analytics · Updated July 2026</small></section>
-
-<section class="cp-shell ns-home-section" id="recently-added">
-  <div class="cp-section-heading"><div><div class="cp-kicker">Free library</div><h2>Featured resources</h2><p>Premium-feeling downloads without pricing confusion, duplicate buttons or noisy sales tricks.</p></div><a href="/shop/">Browse all →</a></div>
-  <div class="ns-premium-product-grid ns-clean-product-grid">
-    <?php foreach(array_slice($products,0,6) as $i=>$p): $slug=(string)$p['slug']; $downloads=fake_downloads($p,$i); $img=cover_img_url($p['cover_image']??''); ?>
-      <article class="ns-premium-product-card ns-clean-resource-card <?=e(product_tone($i))?>">
-        <a class="ns-resource-cover <?= $img?'has-image':'no-image' ?>" href="/shop/<?=e($slug)?>/" <?= $img?'':'style="'.card_cover_style($p['cover_image']??'').'"' ?>>
-          <?php if($img): ?><img class="ns-cover-photo" src="<?=e($img)?>" alt="<?=e($p['name'])?>"><?php endif; ?>
-          <span class="ns-free-pill"><?=e(product_type($slug))?></span>
-        </a>
-        <div class="ns-product-body-v3">
-          <div class="ns-product-meta-v3"><span>FREE · PDF/ZIP</span><button aria-label="Save product" title="Save product" data-ns-product-save data-slug="<?=e($slug)?>">♡</button></div>
-          <h3><a href="/shop/<?=e($slug)?>/"><?=e($p['name'])?></a></h3>
-          <p><?=e($p['description']?:'A curated NexShelfy product.')?></p>
-          <div class="ns-compact-proof"><span>★★★★★</span><small><?=number_format($downloads)?> downloads</small></div>
-          <div class="ns-product-actions-v3"><button class="primary" type="button" data-ns-free-download data-href="/api/free-download.php?type=product&amp;slug=<?=rawurlencode($slug)?>">Download</button><a href="/shop/<?=e($slug)?>/">👁 Preview</a></div>
+      <div class="ns-hero-actions">
+        <a class="ns-btn ns-btn-primary" href="/shop/">Explore Free Library →</a>
+        <a class="ns-btn ns-btn-secondary" href="/contact/">Contact Us</a>
+      </div>
+    </div>
+    <div class="ns-hero-visual">
+      <div class="ns-hero-card">
+        <div class="ns-hero-card-header">
+          <span>Trending Now</span>
+          <b>🔥 Live</b>
         </div>
-      </article>
-    <?php endforeach; ?>
+        <?php foreach(array_slice($products,0,4) as $i=>$p): $img=cover_img_url($p['cover_image']??''); ?>
+          <div class="ns-hero-stat-row">
+            <?php if($img): ?>
+              <img src="<?=e($img)?>" alt="<?=e($p['name'])?>">
+            <?php else: ?>
+              <span class="stat-icon"><?=e(product_icon($p['slug']))?></span>
+            <?php endif; ?>
+            <div>
+              <b><?=e($p['name'])?></b>
+              <small><?=e(product_type($p['slug']))?> · <?=number_format(fake_downloads($p,$i))?> downloads</small>
+            </div>
+            <span class="stat-num">+<?=rand(12,89)?>%</span>
+          </div>
+        <?php endforeach; ?>
+      </div>
+      <div class="ns-float-badge ns-float-badge-1">⭐ 4.9 Rating</div>
+      <div class="ns-float-badge ns-float-badge-2">🌍 80+ Countries</div>
+      <div class="ns-float-badge ns-float-badge-3">📈 48k+ Downloads</div>
+    </div>
   </div>
 </section>
 
-<section class="cp-shell ns-home-section ns-collection-cards">
-  <div class="cp-section-heading"><div><div class="cp-kicker">Collections</div><h2>Start with the outcome</h2></div><a href="/collections/">View collections →</a></div>
-  <div class="ns-collection-grid"><?php foreach($collections as $c): ?><a href="/shop/?q=<?=rawurlencode($c[1])?>"><span><?=e($c[0])?></span><strong><?=e($c[1])?></strong><small><?=e($c[2])?></small><em><?=e($c[3])?></em></a><?php endforeach; ?></div>
-</section>
-
-<section class="cp-shell ns-home-section ns-testimonials ns-testimonials-premium"><div class="cp-section-heading"><div><div class="cp-kicker">Creator feedback</div><h2>Useful resources, saved for real work.</h2><p>48,000+ downloads across resources, from creators in 80+ countries.</p></div></div><div class="ns-testimonial-grid"><blockquote><div class="ns-creator-row"><span class="ns-avatar">AK</span><div><b>Ali Khan</b><small>Founder · Startup workspace</small></div></div><p>“This Notion system saved me hours when planning weekly content.”</p><cite>Used: Personal Knowledge Base</cite></blockquote><blockquote><div class="ns-creator-row"><span class="ns-avatar">SM</span><div><b>Sarah Malik</b><small>Designer · Freelance studio</small></div></div><p>“The library feels clean, practical and ready to use.”</p><cite>Used: Content Calendar</cite></blockquote><blockquote><div class="ns-creator-row"><span class="ns-avatar">HR</span><div><b>Hamza Raza</b><small>Freelancer · Client systems</small></div></div><p>“Simple structure, no noise, and much easier than starting from blank pages.”</p><cite>Used: Freelance Finance Kit</cite></blockquote></div></section>
-
-<section class="cp-shell ns-home-section">
-  <div class="cp-section-heading"><div><div class="cp-kicker">Trending now</div><h2>Read slowly. Apply immediately.</h2></div><a href="/blog/">View all →</a></div>
-  <div class="ns-blog-carousel">
-    <?php foreach(array_slice($posts,0,6) as $post): $date=$post['published_at']?date('M j, Y',strtotime((string)$post['published_at'])):''; $postImg=cover_img_url($post['cover_image']??''); ?>
-      <article class="cp-card ns-post-card-v3"><a class="ns-blog-thumb <?= $postImg?'has-image':'no-image' ?>" href="/blog/<?=e($post['slug'])?>/" style="<?= $postImg?'':card_cover_style($post['cover_image']??'','--cover:'.e($post['cover_color']??'#4f46e5').';') ?>"><?php if($postImg): ?><img src="<?=e($postImg)?>" alt="<?=e($post['title'])?>"><?php endif; ?><span><?=e($post['category']??'Article')?></span></a><div class="cp-card-body"><small><?=e($post['category']??'Article')?><?= $date?' · '.e($date):'' ?><?=!empty($post['reading_time'])?' · '.e($post['reading_time']):''?></small><h2><a href="/blog/<?=e($post['slug'])?>/"><?=e($post['title'])?></a></h2><p><?=e($post['excerpt']??'Practical field notes from NexShelfy.')?></p><a class="cp-read-link" href="/blog/<?=e($post['slug'])?>/">Read article <span>→</span></a></div></article>
-    <?php endforeach; ?>
+<!-- STATS STRIP -->
+<section class="ns-stats-strip ns-animate">
+  <div class="ns-stat-item">
+    <i>⬇</i>
+    <b data-counter="48000" data-suffix="+">0</b>
+    <span>Downloads across resources</span>
+  </div>
+  <div class="ns-stat-item">
+    <i>❤</i>
+    <b data-counter="1800" data-suffix="+">0</b>
+    <span>Saved by visitors</span>
+  </div>
+  <div class="ns-stat-item">
+    <i>✉</i>
+    <b data-counter="12000" data-suffix="+">0</b>
+    <span>Newsletter creators</span>
+  </div>
+  <div class="ns-stat-item">
+    <i>★</i>
+    <b>4.9</b>
+    <span>Average resource rating</span>
   </div>
 </section>
 
+<!-- FEATURED PRODUCTS -->
+<section class="ns-section" id="recently-added">
+  <div class="ns-shell">
+    <div class="ns-section-heading ns-animate ns-animate-delay-1">
+      <div class="heading-left">
+        <div class="ns-kicker">Free Library</div>
+        <h2>Featured Resources</h2>
+        <p>Premium-feeling downloads without pricing confusion, duplicate buttons or noisy sales tricks.</p>
+      </div>
+      <a href="/shop/" class="ns-link-arrow">Browse all →</a>
+    </div>
+    <div class="ns-product-grid">
+      <?php foreach(array_slice($products,0,6) as $i=>$p): $slug=(string)$p['slug']; $downloads=fake_downloads($p,$i); $img=cover_img_url($p['cover_image']??''); ?>
+        <article class="ns-product-card ns-animate ns-animate-delay-<?=($i%5)+1?>">
+          <a class="ns-product-cover <?= $img?'has-image':'no-image' ?>" href="/shop/<?=e($slug)?>/" <?= $img?'':'style="'.card_cover_style($p['cover_image']??'').'"' ?>>
+            <?php if($img): ?><img class="ns-cover-photo" src="<?=e($img)?>" alt="<?=e($p['name'])?>"><?php endif; ?>
+            <span class="ns-product-type"><?=e(product_type($slug))?></span>
+            <div class="ns-cover-overlay">
+              <span class="ns-btn ns-btn-primary" style="font-size:0.8rem;padding:8px 16px;">Quick Preview</span>
+            </div>
+          </a>
+          <div class="ns-product-body">
+            <div class="ns-product-meta">
+              <span class="ns-badge-free">Free · PDF/ZIP</span>
+              <button class="ns-product-save" data-save aria-label="Save product">♡</button>
+            </div>
+            <h3><a href="/shop/<?=e($slug)?>/"><?=e($p['name'])?></a></h3>
+            <p><?=e($p['description']?:'A curated NexShelfy product.')?></p>
+            <div class="ns-product-footer">
+              <span>⬇ <?=number_format($downloads)?> downloads</span>
+              <a href="/shop/<?=e($slug)?>/" class="ns-download-btn">Download →</a>
+            </div>
+          </div>
+        </article>
+      <?php endforeach; ?>
+    </div>
+  </div>
+</section>
+
+<!-- COLLECTIONS -->
+<section class="ns-section" style="background:linear-gradient(180deg,var(--ns-surface-2),var(--ns-surface));">
+  <div class="ns-shell">
+    <div class="ns-section-heading ns-animate">
+      <div class="heading-left">
+        <div class="ns-kicker">Browse by Topic</div>
+        <h2>Collections</h2>
+        <p>Hand-picked bundles organized by what creators actually need.</p>
+      </div>
+      <a href="/collections/" class="ns-link-arrow">View all →</a>
+    </div>
+    <div class="ns-collection-grid">
+      <?php foreach($collections as $i=>$c): ?>
+        <a href="/collections/?cat=<?=rawurlencode($c[1])?>" class="ns-collection-card ns-animate ns-animate-delay-<?=($i%4)+1?>">
+          <div class="ns-collection-icon"><?=e($c[0])?></div>
+          <h3><?=e($c[1])?></h3>
+          <p><?=e($c[2])?></p>
+          <span class="ns-count"><?=e($c[3])?></span>
+        </a>
+      <?php endforeach; ?>
+    </div>
+  </div>
+</section>
+
+<!-- BLOG SECTION -->
+<section class="ns-section">
+  <div class="ns-shell">
+    <div class="ns-section-heading ns-animate">
+      <div class="heading-left">
+        <div class="ns-kicker">From the Blog</div>
+        <h2>Latest Articles</h2>
+        <p>Practical guides, frameworks and insights for the modern creator.</p>
+      </div>
+      <a href="/blog/" class="ns-link-arrow">Read all →</a>
+    </div>
+    <div class="ns-blog-grid">
+      <?php foreach(array_slice($posts,0,3) as $i=>$post): 
+        $img=cover_img_url($post['cover_image']??'');
+        $color=$post['cover_color']??'#6366f1';
+        $date=date('M j, Y', strtotime($post['published_at']??'now'));
+      ?>
+        <article class="ns-blog-card ns-animate ns-animate-delay-<?=($i%3)+1?>">
+          <a href="/blog/<?=e($post['slug'])?>/" class="ns-blog-cover">
+            <?php if($img): ?>
+              <img src="<?=e($img)?>" alt="<?=e($post['title'])?>">
+            <?php else: ?>
+              <div style="width:100%;height:100%;background:<?=e($color)?>;"></div>
+            <?php endif; ?>
+            <span class="ns-blog-category"><?=e($post['category']??'Article')?></span>
+          </a>
+          <div class="ns-blog-body">
+            <h3><a href="/blog/<?=e($post['slug'])?>/"><?=e($post['title'])?></a></h3>
+            <p><?=e($post['excerpt']?:'')?></p>
+            <div class="ns-blog-meta">
+              <span>📅 <?=e($date)?></span>
+              <span>⏱ <?=e($post['reading_time']??'5 min')?></span>
+            </div>
+          </div>
+        </article>
+      <?php endforeach; ?>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="ns-newsletter">
+  <div class="ns-newsletter-bg"></div>
+  <div class="ns-newsletter-inner ns-animate">
+    <div class="ns-kicker">Stay Updated</div>
+    <h2>Join 12,000+ creators</h2>
+    <p>Get free resources, templates and creator tips delivered to your inbox. No spam, unsubscribe anytime.</p>
+    <form class="ns-newsletter-form" action="/api/newsletter.php" method="post">
+      <input type="email" name="email" placeholder="Enter your email" required aria-label="Email">
+      <button type="submit">Subscribe</button>
+    </form>
+    <p class="ns-newsletter-note">🔒 We respect your privacy. No spam ever.</p>
+  </div>
+</section>
 </main>
+
+<!-- FOOTER -->
+<footer class="ns-footer">
+  <div class="ns-footer-grid">
+    <div class="ns-footer-brand">
+      <a href="/" class="ns-brand">
+        <span class="ns-brand-icon">NS</span>
+        NexShelfy
+      </a>
+      <p>Free creator resources, templates and systems for modern creators, founders and freelancers.</p>
+      <div class="ns-footer-social">
+        <a href="#" aria-label="Twitter">𝕏</a>
+        <a href="#" aria-label="Instagram">📷</a>
+        <a href="#" aria-label="LinkedIn">💼</a>
+        <a href="#" aria-label="YouTube">▶️</a>
+      </div>
+    </div>
+    <div class="ns-footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="/shop/">Templates</a></li>
+        <li><a href="/collections/">Collections</a></li>
+        <li><a href="/resources/">Free Resources</a></li>
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </div>
+    <div class="ns-footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/contact/">Contact</a></li>
+        <li><a href="/become-a-creator/">Become a Creator</a></li>
+        <li><a href="/creators/">Creators</a></li>
+      </ul>
+    </div>
+    <div class="ns-footer-col">
+      <h4>Legal</h4>
+      <ul>
+        <li><a href="/privacy/">Privacy Policy</a></li>
+        <li><a href="/terms/">Terms of Service</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="ns-footer-bottom">
+    <p>© <?=date('Y')?> NexShelfy. All rights reserved.</p>
+    <p>Made with ❤️ for creators worldwide</p>
+  </div>
+</footer>
+
+<!-- Back to Top -->
+<button class="ns-back-to-top" id="backToTop" aria-label="Back to top">↑</button>
+
+<!-- Mobile Dock -->
+<nav class="ns-mobile-dock">
+  <div class="ns-mobile-dock-inner">
+    <a href="/" class="active"><span>🏠</span>Home</a>
+    <a href="/shop/"><span>🔍</span>Explore</a>
+    <a href="/saved/"><span>♡</span>Saved</a>
+    <a href="/dashboard/"><span>👤</span>Profile</a>
+  </div>
+</nav>
+
 <?php ns_site_footer(); ?>
-<script src="/assets/nexshelfy-app.js?v=20260717-final-ui-2"></script>
 </body>
 </html>
