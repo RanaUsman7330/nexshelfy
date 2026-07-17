@@ -1,0 +1,25 @@
+NexShelfy Admin Content Manager Update — 10 July 2026
+
+Changed files:
+- admin/index.php
+- admin/assets/admin.css
+- admin/assets/admin.js
+- blog/index.php
+- blog/article.php
+
+Main changes:
+- Redesigned Products, Blogs and Resources admin pages.
+- Native cover image upload fields with live previews.
+- Validated image uploads (JPG/JPEG/PNG/WebP/GIF, max 8MB).
+- Validated downloadable file uploads (max 50MB).
+- Unique safe filenames and writable-folder error reporting.
+- Advanced draft/published controls and saving feedback.
+- Product, article and resource library cards with covers and previews.
+- Automatic slug generation for new items.
+- Fixed admin sidebar vertical scrolling.
+- Fixed relative blog image paths so uploaded covers display publicly.
+
+No SQL import is required. Existing database cover_image columns are already present.
+
+Upload these files using the same folder paths and overwrite the existing files.
+Ensure storage/products, storage/blog and storage/resources are writable (normally 755 folders; PHP process must have write permission).

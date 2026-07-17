@@ -1,0 +1,29 @@
+NexShelfy unified admin and public UI update — 11 July 2026
+
+PUBLIC WEBSITE
+- Centralized the public header and footer in includes/site-shell.php.
+- Removed duplicated hard-coded header/footer markup from homepage, shop, resources, collections, blogs, creators, saved and detail pages.
+- Added Free Products and Free Resources as separate consistent global navigation items.
+- Added server-rendered global theme variables to prevent default-color flashing before JavaScript loads.
+- Extended admin theme colors across page backgrounds, typography, header, footer, buttons, chips, cards, newsletters, trust bands and content panels.
+- Improved all major card types with consistent borders, shadows, hover states, buttons, favorite controls and image overlays.
+- Kept image-first cards using uploaded cover images while retaining a theme-driven gradient fallback.
+
+ADMIN PANEL
+- Rebuilt sidebar into grouped sections: Workspace, Content, Community, Commerce & System.
+- Added icons, stronger active state, better hover state and clearer hierarchy.
+- Fixed the bottom account/sign-out area so Settings and other navigation entries no longer sit behind it.
+- Added a compact account avatar and separate sign-out control.
+- Added Orders to the allowed views and sidebar navigation.
+- Improved tables with sticky headings, spacing, hover feedback and responsive horizontal scrolling.
+- Improved product/resource listing cards, message cards, empty states, search controls and settings swatches.
+- Preserved mobile off-canvas sidebar behavior.
+- Fixed broken character encoding in the admin menu and common labels.
+
+THEME SETTINGS
+- Existing presets and custom colors remain editable in Admin > Settings.
+- Primary, secondary, surface and text colors now affect the complete public website UI.
+- Theme is applied server-side immediately, then refreshed by the existing no-cache settings API.
+
+VALIDATION
+- All PHP files passed php -l syntax validation.

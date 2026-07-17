@@ -1,0 +1,23 @@
+NexShelfy PHP + MySQL Edition
+===============================
+
+1. In Hostinger hPanel create a MySQL database and database user.
+2. Open phpMyAdmin and import: database/nexshelfy.sql
+3. Edit .env and replace DB_DATABASE, DB_USERNAME and DB_PASSWORD.
+4. Upload all files inside public_html/nexshelfy/.
+5. Ensure PHP 8.1 or newer is selected.
+6. Open https://mrusman.com/nexshelfy/api/status.php
+   Expected: {"ok":true,"database":true,...}
+7. Test registration, wishlist, cart, checkout, newsletter, bookmarks and account.
+
+Security
+- .env and SQL are blocked by .htaccess.
+- Passwords use PHP password_hash.
+- PDO prepared statements are used.
+- CSRF and secure sessions are enabled.
+
+Still requires credentials/services
+- Online payment gateway (Stripe/Telr/PayTabs/etc.)
+- Transactional email SMTP
+- Real downloadable ZIP/PDF files and paid-download authorization
+- Admin management panel (database tables already support it)
