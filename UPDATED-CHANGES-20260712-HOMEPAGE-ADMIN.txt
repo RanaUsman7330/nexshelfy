@@ -1,0 +1,44 @@
+NexShelfy Premium Homepage + Admin Content UI Update — 2026-07-12
+
+Changed files:
+- index.php
+- collections/index.php
+- admin/index.php
+- admin/assets/admin.css
+- assets/nexshelfy-app.css
+- assets/nexshelfy-app.js
+
+Public homepage fixes:
+- Simplified Featured resource cards: image, one category badge, title, one-line description, rating/downloads, primary CTA and save icon only.
+- Removed heavy card metadata from homepage cards: likes, repeated category, updated date and duplicate metrics.
+- Replaced direct visible download anchors with gated download buttons using the existing email popup flow.
+- Restored real uploaded cover image rendering by outputting actual <img> tags for homepage cards and recent rows.
+- Added fallback only when no admin cover image exists.
+- Reworked “Recently added / Live downloads” into a clearer Trending downloads panel with compact resource rows and “Updated today”.
+- Reduced homepage vertical spacing between hero, stats, featured, filters, collections, trust and newsletter sections.
+- Converted flame labels into clickable filter links.
+- Added clearer supporting note under stats: based on platform analytics / updated July 2026.
+- Updated community proof copy so it does not pretend fully verified profiles exist yet.
+- Added blog thumbnail styling for trending cards.
+- Improved newsletter layout with inline email/button, privacy copy and premium spacing.
+- Header dynamic CTA changed from “Free resources” to “Browse Library” to avoid repetition.
+- Added saved icon tooltip text for zero-state clarity.
+
+Collections page fixes:
+- Rebuilt page into premium outcome-based layout.
+- Added clearer hero, search, trust pills and featured info card.
+- Added 6 collection cards with resource counts and outcome CTA.
+- Prevented old JS from injecting duplicate collection search UI on this premium page.
+
+Admin Products/Resources/Blogs fixes:
+- Products page now has SaaS-style page hero, KPI cards, sticky editor panel and visual product cards.
+- Product cards show cover image, status, downloads, leads, updated date, preview, quick edit and delete.
+- Resources page now uses visual cards with resource type, downloads, leads, asset name and test/edit/delete actions.
+- Blogs page now behaves more like a CMS with thumbnail cards, status, read time, attached resources, date, preview and edit.
+- Forms were grouped into Basic / Media / Download / Publish sections with larger dropzone-style upload UI.
+- Settings preset options improved with safer high-contrast combinations: Skyline Blue, Graphite Mono, Warm Cream and Plum Studio.
+
+Technical notes:
+- No database migration is required.
+- Existing email-gated download API remains in use.
+- PHP syntax lint passed for all PHP files in the package.

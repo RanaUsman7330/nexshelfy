@@ -1,0 +1,23 @@
+NexShelfy homepage micro-polish update - 2026-07-12
+
+Changed files:
+- index.php
+- assets/nexshelfy-app.css
+- assets/nexshelfy-app.js
+
+What changed:
+1. Featured card save button redesigned as frosted heart circle.
+2. Saved state now changes to filled heart with small pop animation.
+3. Card image height reduced by about 13%.
+4. Download CTA shortened to Get Free.
+5. Preview CTA now includes eye icon.
+6. Category badge height reduced.
+7. Downloads/rating box is cleaner: yellow stars only, neutral meta.
+8. Card shadow and hover animation improved: lift, image zoom, CTA glow.
+9. Hero right panel upgraded into a floating dashboard with downloads today, rating and quick status pills.
+10. Stats strip now includes icons.
+11. Testimonials rebuilt with avatar, role/company and creator badge styling.
+12. Trending blog cards now render uploaded cover images when available.
+13. Newsletter includes 12,000+ creators proof above the field and no-spam privacy note.
+
+No database migration required.

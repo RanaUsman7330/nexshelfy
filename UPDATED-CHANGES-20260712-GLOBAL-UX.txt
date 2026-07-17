@@ -1,0 +1,16 @@
+NexShelfy global UX update 2026-07-12
+
+Changed:
+- Global header polished: active state, centered nav, fixed logo width, equal action heights, sticky blur/border.
+- Global footer now includes the latest newsletter and is reused by public PHP pages. Duplicate page-level newsletter blocks are removed/prevented.
+- Homepage cards tightened: shorter images, stronger save control, simpler actions, cleaner hierarchy.
+- Shop/resources cards use actual uploaded img tags where available, with fallback only when image is missing.
+- Download CTAs use the gated popup flow via data attributes in major listing cards.
+- Blog thumbnails use normalized asset URLs and consistent 16:10 ratio.
+- Collections page improved with equal-height cards, resource count badge positioning, search filtering and responsive grid.
+- Creators page rebuilt into marketplace-style cards and attempts to load approved creator applications from admin.
+- About and Contact pages replaced with current NexShelfy content, meta title/description and global shell.
+- Mobile dock synced with public navigation and safe-area padding added.
+- Sticky download bar adjusted to avoid footer overlap and mobile safe area issues.
+
+No database migration required.

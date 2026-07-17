@@ -1,0 +1,35 @@
+NexShelfy UI fixes - 2026-07-12
+
+Fixed:
+1. Restored user-side card images from admin uploads.
+   - Added shared ns_public_asset_url() and ns_cover_style() helpers.
+   - Product, resource, blog and related card cover styles now generate absolute /storage/... URLs.
+   - Inline image backgrounds now use !important so later global theme CSS cannot override admin uploaded images.
+   - Product detail recommended cards now load cover_image as well.
+
+2. Improved global theme presets.
+   - Added safer high-contrast presets: Aurora Clean, Midnight Neon, Warm Sand, Mint Growth, Rose Violet and Clean Mono.
+   - Server-side settings save now applies the selected preset palette, so colour combinations remain readable.
+   - Added safer theme CSS for cards, chips, footer, newsletter, hero sections and muted text.
+
+3. Improved admin content listing UI.
+   - Products, blogs, resources, comments, leads, creator applications, messages, subscribers, orders and activity listing blocks now have advanced card/table styling.
+   - Improved badges, hover states, row spacing, buttons, empty states, order forms and message grids.
+   - Settings colour swatches and helper text improved.
+
+4. Reduced homepage spacing.
+   - Hero, stats strip, featured sections, trust band and newsletter spacing tightened.
+   - Animated shelf height reduced for a cleaner above-the-fold layout.
+
+5. Rebuilt collections page look.
+   - Better hero composition.
+   - More advanced collection cards.
+   - Improved responsive layout for tablet and mobile.
+
+Validation:
+- PHP syntax check passed for all PHP files.
+- No database migration required.
+
+Upload recommendation:
+- Upload the changed-files ZIP into public_html and overwrite existing files.
+- Hard refresh browser cache after upload.
