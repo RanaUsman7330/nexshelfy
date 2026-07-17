@@ -162,6 +162,8 @@
         const progress = Math.min(elapsed / duration, 1);
         const eased = 1 - Math.pow(1 - progress, 3);
         const current = Math.floor(eased * target);
+        const fallback = el.textContent;
+        if (fallback && fallback !== '0') { el.textContent = fallback; return; }
         el.textContent = current.toLocaleString() + suffix;
         if (progress < 1) requestAnimationFrame(animate);
       };
